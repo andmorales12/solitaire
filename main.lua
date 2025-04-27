@@ -6,40 +6,35 @@
 
 io.stdout:setvbuf("no")
 
-Card = {}
+local CardsLoad = require "cardsload"
+local CardPiles = require "cardpiles"
+local Controls = require "controls"
 
-function Card:new(suit, value)
-    local newCard = {
-        suit = suit,
-        value = value,
-        img = love.graphics.newImage("assets/card_"..suit.."_"..value..".png"),
-        faceUp = false,
-        x = 0,
-        y = 0,
-        width = 64,
-        height = 64,
-        dragging = false,
-        offsetX = 0,
-        offsetY = 0,
-    }
-    setmetatable(newCard, self)
-    self.__index = self
-    return newCard
+local cardPiles
+local controls
+
+function love.load()
+    love.graphics.setBackgroundColor(0, 0.5, 0) -- load game background color
+
+    cardPiles = CardPiles:new()
+    cardPiles:init()
+
+    controls = Controls:new(cardPiles)
 end
 
-function Card:draw()
-    if self.faceUp then
-        love.graphics.draw(self.img, self.x, self.y)
-    else
-        local back = love.graphics.newImage("assets/card_back.png")
-        love.graphics.draw(back, self.x, self.y)
-    end
+function love.update(dt)
+    -- for movement
+    controls:update(dt)
 end
 
-function Card:isHovered(mx, my)
-    return mx >= self.x and mx <= self.x + self.width
-       and my >= self.y and my <= self.y + self.height
+function love.draw()
+    cardPiles:draw()
 end
 
-return Card
+function love.mousepressed(x, y, button, istouch, presses)
+    controls:mousepressed(x, y, button)
+end
 
+function love.mousereleased(x, y, button, istouch, presses)
+    controls:mousereleased(x, y, button)
+end
