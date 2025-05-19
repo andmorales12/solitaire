@@ -1,4 +1,5 @@
-# solitaire
+# solitaire, but better
+### i am still updating readme
 
-## please check back on 04/27 or 04/28
+#
 
