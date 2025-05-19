@@ -16,6 +16,6 @@
 ### how successful plan was: unsuccessful
 
 ## assets
-### i got my solitaire card assets from www.kenney.nl
+### i got my solitaire card assets from www.kenney.nl, here: https://www.kenney.nl/assets/playing-cards-pack
 ### so i did not make any assets in this project
 
