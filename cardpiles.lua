@@ -20,6 +20,10 @@ function CardPiles:new()
 end
 
 function CardPiles:init()
+    self.deck = {}
+    self.drawPile = {}
+    self.tableau = { {}, {}, {}, {}, {}, {}, {} }
+    self.foundations = { {}, {}, {}, {} }
     self:initializeDeck()
 end
 
@@ -57,8 +61,6 @@ function CardPiles:dealCards()
             cardIndex = cardIndex + 1
         end
     end
-
-    -- Remove dealt cards from the deck
     for i = 1, cardIndex - 1 do
         table.remove(self.deck, 1)
     end
@@ -66,11 +68,15 @@ end
 
 function CardPiles:drawFromDeck()
     if #self.deck > 0 then
-        local card = table.remove(self.deck)
-        card.faceUp = true
-        card.x = 200
-        card.y = 100
-        table.insert(self.drawPile, card)
+        -- Draw up to three cards
+        local drawCount = math.min(3, #self.deck)
+        for i = 1, drawCount do
+            local card = table.remove(self.deck)
+            card.faceUp = true
+            card.x = 200 + (i - 1) * 15 -- Slight spread to show multiple cards
+            card.y = 100
+            table.insert(self.drawPile, card)
+        end
     elseif #self.drawPile > 0 then
         -- Reset draw pile into deck
         while #self.drawPile > 0 do
@@ -80,6 +86,7 @@ function CardPiles:drawFromDeck()
         end
     end
 end
+
 
 function CardPiles:draw()
     love.graphics.setColor(1, 1, 1)
@@ -91,24 +98,33 @@ function CardPiles:draw()
         love.graphics.draw(back, self.deckX, self.deckY)
     end
 
-    -- draw draw pile
+    -- Draw draw pile
     love.graphics.rectangle("line", 200, 100, 64, 64)
-    if #self.drawPile > 0 then
-        local topCard = self.drawPile[#self.drawPile]
-        topCard:draw()
+    for i = 1, #self.drawPile do
+      local card = self.drawPile[i]
+      card:draw()
     end
 
-    -- draw the tableau
-    for i, pile in ipairs(self.tableau) do
-        for j, card in ipairs(pile) do
+    -- Draw tableau
+    for _, pile in ipairs(self.tableau) do
+        for _, card in ipairs(pile) do
             card:draw()
         end
     end
 
-    -- draw foundations
+    -- Draw foundations
     for i = 1, 4 do
         love.graphics.rectangle("line", 400 + (i - 1) * 80, 100, 64, 64)
+        local top = self.foundations[i][#self.foundations[i]]
+        if top then top:draw() end
     end
+end
+
+function CardPiles:checkWin()
+    for _, pile in ipairs(self.foundations) do
+        if #pile < 13 then return false end
+    end
+    return true
 end
 
 return CardPiles
