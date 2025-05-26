@@ -1,5 +1,5 @@
 # solitaire, but better
-##### i am still updating readme
+
 
 ## programming patterns
 ### component
