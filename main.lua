@@ -17,6 +17,7 @@ local win = false
 local resetButton = { x = 700, y = 500, w = 100, h = 40 }
 
 function love.load()
+    love.window.setTitle("solitaire")
     love.graphics.setBackgroundColor(0, 0.5, 0)
     cardPiles = CardPiles:new()
     cardPiles:init()
